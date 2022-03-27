@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: on-failure
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "zno"
+
+  db_lab_app:
+    image: db_lab_1:1.0
+    container_name: db_lab_1_app
+    build: .
+    restart: on-failure
+    depends_on:
+      - postgres_db
+    volumes:
+      - ./resources:/application/resources:ro
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "zno"
+      POSTGRES_HOST: "postgres_db"
+      POSTGRES_PORT: "5432"
